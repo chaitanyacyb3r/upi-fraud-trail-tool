@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Data files (large, regenerable)
+final_project_v2/data/statements/
+final_project_v2/data/forensic_network.gpickle
+
+# Streamlit temp
+final_project_v2/src/tmp_graph.html
+
+# Reports (generated on demand)
+final_project_v2/reports/*.pdf
+
+# OS
+*.stackdump
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Scratch/test files
+final_project_v2/src/mentor_checks.py
+final_project_v2/data/account_features_camouflaged.csv
+final_project_v2/data/ablation_results_camouflaged.csv

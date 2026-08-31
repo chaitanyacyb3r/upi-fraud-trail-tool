@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+tmp_graph.html
+reports/
+.DS_Store
