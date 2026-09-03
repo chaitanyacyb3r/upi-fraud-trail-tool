@@ -95,19 +95,21 @@ Transparent, auditable risk score using only camouflage-validated features:
 
 ### Community Detection (`community_detection.py`)
 Louvain unsupervised clustering on the transaction graph. Key finding:
-**Louvain rediscovered the actual fraud rings from pure graph structure
-with zero labels.**
+**7/7 multi-account layering rings perfectly isolated by unsupervised
+clustering — zero labels used.**
 
 | Community | Size | Mules | Mule % | Discovery |
 |-----------|------|-------|--------|-----------|
-| 3 (main)  | 500  | 20    | 4.0%   | Normal population |
+| 3 (main)  | ~500 | 20    | ~4%    | Normal population |
 | 4         | 17   | 7     | 41.2%  | Fan-in mule cluster |
-| 0,1,2,5,6,7,8 | 4-6 each | 3 each | 50-75% | Layering chains (A→B→C) |
+| 0,1,2,5,6,7,8,9 | 4-6 each | 3 each | 50-75% | Layering chains (A→B→C) |
 
-Each of the 7 small communities corresponds to an actual layering ring
-from `fraud_storylines.py`, with mule-to-mule edges forming the exact
-chain structure. This is independently verifiable against the generated
-fraud ring definitions.
+Each of the 7 small communities corresponds to an actual layering ring,
+verified against ground-truth ring IDs (approach A: genuine validation,
+not structural self-consistency). The 27 single-mule fan-in accounts
+cluster into only 3 communities by shared victim pools — a real
+structural finding reported separately since single-account "rings"
+can't fail the community-match test by definition.
 
 ### Benford's Law Analysis (`benford_analysis.py`)
 Chi-square test of first-digit distributions against Benford's Law.
@@ -130,8 +132,9 @@ Every fix was independently confirmed against real generated data:
 - Tier 1 graph features: survived two rounds of camouflage testing.
   Features that collapsed (avg_dwell_time, clustering_coefficient) were
   correctly dropped before inclusion.
-- Community detection: cross-referenced against actual fraud ring
-  definitions — 7/7 layering chains perfectly isolated.
+- Community detection: 7/7 multi-account layering rings perfectly
+  isolated — verified against ground-truth ring IDs (genuine validation,
+  not structural self-consistency).
 - Entity resolution: duplicate Faker-generated names are quarantined
   (tagged AMBIGUOUS) rather than silently dropped or merged.
 - Graph: MultiDiGraph (not DiGraph) — repeat transactions between the

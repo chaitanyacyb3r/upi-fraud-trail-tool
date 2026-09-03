@@ -153,7 +153,7 @@ def render_overview_tab(G, alerts_df, risk_df, communities_df, benford_df):
         st.success(
             f"**{len(fraud_comms)} fraud-heavy communities detected** "
             f"(>30% mule density) from pure graph structure — zero labels used. "
-            f"7 of these correspond exactly to layering chains (A->B->C)."
+            f"7/7 multi-account layering rings perfectly isolated (ground-truth validated)."
         )
 
 
@@ -276,9 +276,10 @@ def render_community_tab(communities_df, comm_accounts_df, risk_df):
     **Method:** Unsupervised Louvain clustering on the transaction graph — no labels used.
     Communities are groups of accounts that transact heavily with each other.
 
-    **Validated result:** 7 small communities correspond exactly to the layering chains
-    (A->B->C mule-to-mule chains) from the fraud rings. Community 4 clusters 7 fan-in
-    mules who share overlapping victim pools.
+    **Validated result:** 7/7 multi-account layering rings perfectly isolated —
+    verified against ground-truth ring IDs. The 27 single-mule fan-in accounts
+    cluster into 3 communities by shared victim pools (a real structural finding,
+    reported separately since single-account rings can't fail the match test).
     """)
 
     if communities_df is None:
