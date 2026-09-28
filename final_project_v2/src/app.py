@@ -247,24 +247,51 @@ def render_investigation_tab(G, alerts_df, risk_df):
         st.markdown("---")
         st.markdown("##### Legal Export")
 
-        if st.button("Generate Form 'A' Report (Delhi HC Format)"):
-            with st.spinner("Compiling evidentiary UTRs and generating PDF..."):
-                from export_report import generate_form_a_pdf
+        col_btn1, col_btn2 = st.columns(2)
 
-                os.makedirs("../reports", exist_ok=True)
-                safe_rule_name = alert_row['rule'].replace(" ", "_").replace("(", "").replace(")", "")
-                report_path = f"../reports/FormA_{selected_account}_{safe_rule_name}.pdf"
+        with col_btn1:
+            if st.button("Generate Form 'A' Report (Evidence Index)"):
+                with st.spinner("Compiling evidentiary UTRs and generating PDF..."):
+                    from export_report import generate_form_a_pdf
 
-                generate_form_a_pdf(alert_row, G, report_path)
-                st.success(f"Report saved to {report_path}")
+                    os.makedirs("../reports", exist_ok=True)
+                    safe_rule_name = alert_row['rule'].replace(" ", "_").replace("(", "").replace(")", "")
+                    report_path = f"../reports/FormA_{selected_account}_{safe_rule_name}.pdf"
 
-                with open(report_path, "rb") as pdf_file:
-                    st.download_button(
-                        label="Download Form 'A' PDF",
-                        data=pdf_file,
-                        file_name=os.path.basename(report_path),
-                        mime="application/pdf"
+                    generate_form_a_pdf(alert_row, G, report_path)
+                    st.success(f"Form 'A' saved to {report_path}")
+
+                    with open(report_path, "rb") as pdf_file:
+                        st.download_button(
+                            label="Download Form 'A' PDF",
+                            data=pdf_file,
+                            file_name=os.path.basename(report_path),
+                            mime="application/pdf"
+                        )
+
+        with col_btn2:
+            if st.button("Generate FIR Case Brief (Investigation Summary)"):
+                with st.spinner("Generating FIR-ready case brief with legal analysis..."):
+                    from fir_case_brief import generate_fir_brief_pdf
+
+                    os.makedirs("../reports", exist_ok=True)
+                    safe_rule_name = alert_row['rule'].replace(" ", "_").replace("(", "").replace(")", "")
+                    brief_path = f"../reports/FIR_Brief_{selected_account}_{safe_rule_name}.pdf"
+
+                    generate_fir_brief_pdf(
+                        alert_row, G, brief_path,
+                        risk_df=risk_df,
+                        comm_df=load_csv_safe("../data/detected_communities_accounts.csv")
                     )
+                    st.success(f"FIR Case Brief saved to {brief_path}")
+
+                    with open(brief_path, "rb") as pdf_file:
+                        st.download_button(
+                            label="Download FIR Case Brief PDF",
+                            data=pdf_file,
+                            file_name=os.path.basename(brief_path),
+                            mime="application/pdf"
+                        )
 
 
 # ============================================================
