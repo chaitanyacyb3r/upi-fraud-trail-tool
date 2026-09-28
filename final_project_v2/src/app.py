@@ -247,7 +247,7 @@ def render_investigation_tab(G, alerts_df, risk_df):
         st.markdown("---")
         st.markdown("##### Legal Export")
 
-        col_btn1, col_btn2 = st.columns(2)
+        col_btn1, col_btn2, _ = st.columns([1.1, 1.3, 2.6])
 
         with col_btn1:
             if st.button("Generate Form 'A' Report (Evidence Index)"):
@@ -272,13 +272,15 @@ def render_investigation_tab(G, alerts_df, risk_df):
         with col_btn2:
             if st.button("Generate FIR Case Brief (Investigation Summary)"):
                 with st.spinner("Generating FIR-ready case brief with legal analysis..."):
-                    from fir_case_brief import generate_fir_brief_pdf
+                    import importlib
+                    import fir_case_brief
+                    importlib.reload(fir_case_brief)
 
                     os.makedirs("../reports", exist_ok=True)
                     safe_rule_name = alert_row['rule'].replace(" ", "_").replace("(", "").replace(")", "")
                     brief_path = f"../reports/FIR_Brief_{selected_account}_{safe_rule_name}.pdf"
 
-                    generate_fir_brief_pdf(
+                    fir_case_brief.generate_fir_brief_pdf(
                         alert_row, G, brief_path,
                         risk_df=risk_df,
                         comm_df=load_csv_safe("../data/detected_communities_accounts.csv")
